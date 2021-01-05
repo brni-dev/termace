@@ -1,4 +1,4 @@
-import colorama, os, subprocess, time, threading, sys, pathlib, ctypes
+import colorama, os, subprocess, time, threading, sys, ctypes, base64
 from dotenv import load_dotenv  
 from colorama import init, Fore, Style, Back, AnsiToWin32, ansi
 colorama.init(convert=True)
@@ -53,13 +53,20 @@ def main():
         while newpswrd != verifnewpswrd:
             print(f"\n{terminalred}{c_reset}{shellred}Error! Entered wrong password!{c_reset}\n")
             verifnewpswrd = input(f"{terminalgreen}{c_reset}{shellred}Confirm new password: {c_reset}")
+        verifncoded = verifnewpswrd.encode("ascii") 
+        base64_bytes = base64.b64encode(verifncoded) 
+        base64_string = base64_bytes.decode("ascii")
         f = open(".env","w+")
-        f.write(f"PASSWORD={newpswrd}")
+        f.write(f"PASSWORD='{base64_string}'")
         f.close()
     else:
         print(colorama.ansi.clear_screen())
         entpasd = input(f"{terminalgreen}{c_reset}{shellred}Password to login: {c_reset}")
-        while entpasd != pswrd:
+        base64_strin = os.getenv("PASSWORD")
+        base64_byt = base64_strin.encode("ascii") 
+        sample_string_bytes = base64.b64decode(base64_byt) 
+        sample_string = sample_string_bytes.decode("ascii") 
+        while entpasd != sample_string:
             print(f"\n{terminalred}{c_reset}{shellred}Error! Entered wrong password!{c_reset}\n")
             entpasd = input(f"{terminalgreen}{c_reset}{shellred}Password to login: {c_reset}")
     print(colorama.ansi.clear_screen())
@@ -93,9 +100,13 @@ def main():
             sys.exit(f"{terminalgreen}{c_reset}{shellred}Exiting...{c_resetall}")
         elif cmd == "term --changepassword" or cmd == "term -cp":
             print(colorama.ansi.clear_screen())
+            base64_strini = os.getenv("PASSWORD")
+            base64_byti = base64_strini.encode("ascii") 
+            sample_string_by = base64.b64decode(base64_byti) 
+            sample_sring = sample_string_by.decode("ascii") 
             entpasd = input(f"{terminalgreen}{c_reset}{shellred}Old Password: {c_reset}")
             print(colorama.ansi.clear_screen())
-            while entpasd != os.getenv("PASSWORD"):
+            while entpasd != sample_sring:
                 print(colorama.ansi.clear_screen())
                 print(f"{terminalred}{c_reset}{shellred}Error! Entered wrong password!{c_reset}\n")
                 entpasd = input(f"{terminalgreen}{c_reset}{shellred}Old Password: {c_reset}")
@@ -111,13 +122,20 @@ def main():
                 print(colorama.ansi.clear_screen())
                 print(f"{terminalred}{c_reset}{shellred}Error! Entered wrong password!{c_reset}\n")
                 verifnewpswrd = input(f"{terminalgreen}{c_reset}{shellred}Confirm new password: {c_reset}")
+            verifncode = verifnewpswrd.encode("ascii") 
+            base6_bytes = base64.b64encode(verifncode) 
+            base64_stri = base6_bytes.decode("ascii")
             f = open(".env","w+")
-            f.write(f"PASSWORD={newpswrd}")
+            f.write(f"PASSWORD='{base64_stri}'")
             f.close()
             print(colorama.ansi.clear_screen())
             print(f"{terminalgreen}{c_reset}{shellred}Successfully changed password! Returning to shell...{c_reset}")
         elif cmd == "term --userinfo" or cmd == "term -ui":
-            print(f"{c_reset}{c_green}User info:\n   -- {c_red}Username: {c_magenta}{usrname}\n   {c_green}-- {c_red}Password: {c_magenta}{pswrd}{c_reset}")
+            basey64_strin = os.getenv("PASSWORD")
+            base64_byty = basey64_strin.encode("ascii") 
+            smple_string_bytes = base64.b64decode(base64_byty) 
+            sam = smple_string_bytes.decode("ascii") 
+            print(f"{c_reset}{c_green}User info:\n   -- {c_red}Username: {c_magenta}{usrname}\n   {c_green}-- {c_red}Password: {c_magenta}{sam}{c_reset}")
             time.sleep(3.6)
             print(colorama.ansi.clear_screen())
             print(f"{terminalgreen}{c_reset}{shellred}Screen cleared due to security reasons!{c_reset}")
